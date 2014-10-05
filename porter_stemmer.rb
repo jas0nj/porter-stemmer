@@ -25,7 +25,7 @@ def measure(word)
     # TODO y is in both consonants and vowels
     # TODO maybe use other symbol for one case?
     # TODO Use \A and \Z or ^ and $?
-   if /^[b-dfhj-np-tv-z]*([aeiouy]*[b-dfhj-np-tv-z]*){#{i}}[aeiouy]*$/.match(word) != nil
+   if /^[b-df-hj-np-tv-z]*([aeiouy]*[b-df-hj-np-tv-z]*){#{i}}[aeiouy]*$/.match(word) != nil
      # Found an i that matches, it's the measure.
      measure = i
      break

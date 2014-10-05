@@ -75,10 +75,10 @@ end
 
 def step_1b(word)
   if /eed$/.match(word) != nil
-    if measure(word.sub("eed", "")) > 0
+    if measure(word.sub(/eed$/, "")) > 0
       word.sub!(/eed$/, "ee")
     end
-  elsif contains_vowel?(word.sub("ed", "")) and /ed$/.match(word) != nil
+  elsif contains_vowel?(word.sub(/ed$/, "")) and /ed$/.match(word) != nil
     word.sub!(/ed$/, "")
   
     puts "After Step 1b1 #{word}" if DEBUG
@@ -97,7 +97,7 @@ def step_1b(word)
       word = word + "e"
     end
   
-  elsif contains_vowel?(word.sub("ing", "")) and /ing$/.match(word) != nil
+  elsif contains_vowel?(word.sub(/ing$/, "")) and /ing$/.match(word) != nil
     word.sub!(/ing$/, "")
   
     puts "After Step 1b2 #{word}"  if DEBUG
@@ -130,83 +130,83 @@ end
 
 def step_2(word)
   if /ational$/.match(word) != nil
-    if measure(word.sub("ational", "")) > 0
+    if measure(word.sub(/ational$/, "")) > 0
       word.sub!(/ational$/, "ate")
     end
   elsif /tional$/.match(word) != nil
-    if measure(word.sub("tional", "")) > 0
+    if measure(word.sub(/tional$/, "")) > 0
       word.sub!(/tional$/, "tion")
     end
   elsif /enci$/.match(word) != nil
-    if measure(word.sub("enci", "")) > 0
+    if measure(word.sub(/enci$/, "")) > 0
       word.sub!(/enci$/, "ence")
     end
   elsif /anci$/.match(word) != nil
-    if measure(word.sub("anci", "")) > 0
+    if measure(word.sub(/anci$/, "")) > 0
       word.sub!(/anci$/, "ance")
     end
   elsif /izer$/.match(word) != nil
-    if measure(word.sub("izer", "")) > 0
+    if measure(word.sub(/izer$/, "")) > 0
       word.sub!(/izer$/, "ize")
     end
   elsif /abli$/.match(word) != nil
-    if measure(word.sub("abli", "")) > 0
+    if measure(word.sub(/abli$/, "")) > 0
       word.sub!(/abli$/, "able")
     end
   elsif /alli$/.match(word) != nil
-    if measure(word.sub("alli", "")) > 0
+    if measure(word.sub(/alli$/, "")) > 0
       word.sub!(/alli$/, "al")
     end
   elsif /entli$/.match(word) != nil
-    if measure(word.sub("entli", "")) > 0
+    if measure(word.sub(/entli$/, "")) > 0
       word.sub!(/entli$/, "ent")
     end
   elsif /eli$/.match(word) != nil
-    if measure(word.sub("eli", "")) > 0
+    if measure(word.sub(/eli$/, "")) > 0
       word.sub!(/eli$/, "e")
     end
   elsif /ousli$/.match(word) != nil
-    if measure(word.sub("ousli", "")) > 0
+    if measure(word.sub(/ousli$/, "")) > 0
       word.sub!(/ousli$/, "ous")
     end
   elsif /ization$/.match(word) != nil
-    if measure(word.sub("ization", "")) > 0
+    if measure(word.sub(/ization$/, "")) > 0
       word.sub!(/ization$/, "ize")
     end
   elsif /ation$/.match(word) != nil
-    if measure(word.sub("ation", "")) > 0
+    if measure(word.sub(/ation$/, "")) > 0
       word.sub!(/ation$/, "ate")
     end
   elsif /ator$/.match(word) != nil
-    if measure(word.sub("ator", "")) > 0
+    if measure(word.sub(/ator$/, "")) > 0
       word.sub!(/ator$/, "ate")
     end
   elsif /alism$/.match(word) != nil
-    if measure(word.sub("alism", "")) > 0
+    if measure(word.sub(/alism$/, "")) > 0
       word.sub!(/alism$/, "al")
     end
   elsif /iveness$/.match(word) != nil
-    if measure(word.sub("iveness", "")) > 0
+    if measure(word.sub(/iveness$/, "")) > 0
       word.sub!(/iveness$/, "ive")
     end
   elsif /fulness$/.match(word) != nil
-    if measure(word.sub("fulness", "")) > 0
+    if measure(word.sub(/fulness$/, "")) > 0
       word.sub!(/fulness$/, "ful")
     end
   elsif /ousness$/.match(word) != nil
-    if measure(word.sub("ousness", "")) > 0
+    if measure(word.sub(/ousness$/, "")) > 0
       word.sub!(/ousness$/, "ous")
     end
   elsif /aliti$/.match(word) != nil
-    if measure(word.sub("aliti", "")) > 0
+    if measure(word.sub(/aliti$/, "")) > 0
       word.sub!(/aliti$/, "al")
     end
   elsif /iviti$/.match(word) != nil
-    if measure(word.sub("iviti", "")) > 0
+    if measure(word.sub(/iviti$/, "")) > 0
       word.sub!(/iviti$/, "ive")
     end
   elsif /biliti$/.match(word) != nil
-    if measure(word.sub("biliti", "")) > 0
+    if measure(word.sub(/biliti$/, "")) > 0
       word.sub!(/biliti$/, "ble")
     end
   end
@@ -216,31 +216,31 @@ end
 
 def step_3(word)
   if /icate$/.match(word) != nil
-    if measure(word.sub("icate", "")) > 0
+    if measure(word.sub(/icate$/, "")) > 0
       word.sub!(/icate$/, "ic")
     end
   elsif /ative$/.match(word) != nil
-    if measure(word.sub("ative", "")) > 0
+    if measure(word.sub(/ative$/, "")) > 0
       word.sub!(/ative$/, "")
     end
   elsif /alize$/.match(word) != nil
-    if measure(word.sub("alize", "")) > 0
+    if measure(word.sub(/alize$/, "")) > 0
       word.sub!(/alize$/, "al")
     end
   elsif /iciti$/.match(word) != nil
-    if measure(word.sub("iciti", "")) > 0
+    if measure(word.sub(/iciti$/, "")) > 0
       word.sub!(/iciti$/, "ic")
     end
   elsif /ical$/.match(word) != nil
-    if measure(word.sub("ical", "")) > 0
+    if measure(word.sub(/ical$/, "")) > 0
       word.sub!(/ical$/, "ic")
     end
   elsif /ful$/.match(word) != nil
-    if measure(word.sub("ful", "")) > 0
+    if measure(word.sub(/ful$/, "")) > 0
       word.sub!(/ful$/, "")
     end
   elsif /ness$/.match(word) != nil
-    if measure(word.sub("ness", "")) > 0
+    if measure(word.sub(/ness$/, "")) > 0
       word.sub!(/ness$/, "")
     end
   end
@@ -250,79 +250,79 @@ end
 
 def step_4(word)
   if /al$/.match(word) != nil
-    if measure(word.sub("al", "")) > 1
+    if measure(word.sub(/al$/, "")) > 1
       word.sub!(/al$/, "")
     end
   elsif /ance$/.match(word) != nil
-    if measure(word.sub("ance", "")) > 1
+    if measure(word.sub(/ance$/, "")) > 1
       word.sub!(/ance$/, "")
     end
   elsif /ence$/.match(word) != nil
-    if measure(word.sub("ence", "")) > 1
+    if measure(word.sub(/ence$/, "")) > 1
       word.sub!(/ence$/, "")
     end
   elsif /er$/.match(word) != nil
-    if measure(word.sub("er", "")) > 1
+    if measure(word.sub(/er$/, "")) > 1
       word.sub!(/er$/, "")
     end
   elsif /ic$/.match(word) != nil
-    if measure(word.sub("ic", "")) > 1
+    if measure(word.sub(/ic$/, "")) > 1
       word.sub!(/ic$/, "")
     end
   elsif /able$/.match(word) != nil
-    if measure(word.sub("able", "")) > 1
+    if measure(word.sub(/able$/, "")) > 1
       word.sub!(/able$/, "")
     end
   elsif /ible$/.match(word) != nil
-    if measure(word.sub("ible", "")) > 1
+    if measure(word.sub(/ible$/, "")) > 1
       word.sub!(/ible$/, "")
     end
   elsif /ant$/.match(word) != nil
-    if measure(word.sub("ant", "")) > 1
+    if measure(word.sub(/ant$/, "")) > 1
       word.sub!(/ant$/, "")
     end
   elsif /ement$/.match(word) != nil
-    if measure(word.sub("ement", "")) > 1
+    if measure(word.sub(/ement$/, "")) > 1
       word.sub!(/ement$/, "")
     end
   elsif /ment$/.match(word) != nil
-    if measure(word.sub("ment", "")) > 1
+    if measure(word.sub(/ment$/, "")) > 1
       word.sub!(/ment$/, "")
     end
   elsif /ent$/.match(word) != nil
-    if measure(word.sub("ent", "")) > 1
+    if measure(word.sub(/ent$/, "")) > 1
       word.sub!(/ent$/, "")
     end
   elsif /ion$/.match(word) != nil
-    if measure(word.sub("ion", "")) > 1 and (ends_with?(word.sub("ion", ""), "s") or ends_with?(word.sub("ion", ""), "t"))
+    if measure(word.sub(/ion$/, "")) > 1 and (ends_with?(word.sub("ion", ""), "s") or ends_with?(word.sub("ion", ""), "t"))
       word.sub!(/ion$/, "")
     end
   elsif /ou$/.match(word) != nil
-    if measure(word.sub("ou", "")) > 1
+    if measure(word.sub(/ou$/, "")) > 1
       word.sub!(/ou$/, "")
     end
   elsif /ism$/.match(word) != nil
-    if measure(word.sub("ism", "")) > 1
+    if measure(word.sub(/ism$/, "")) > 1
       word.sub!(/ism$/, "")
     end
   elsif /ate$/.match(word) != nil
-    if measure(word.sub("ate", "")) > 1
+    if measure(word.sub(/ate$/, "")) > 1
       word.sub!(/ate$/, "")
     end
   elsif /iti$/.match(word) != nil
-    if measure(word.sub("iti", "")) > 1
+    if measure(word.sub(/iti$/, "")) > 1
       word.sub!(/iti$/, "")
     end
   elsif /ous$/.match(word) != nil
-    if measure(word.sub("ous", "")) > 1
+    if measure(word.sub(/ous$/, "")) > 1
       word.sub!(/ous$/, "")
     end
   elsif /ive$/.match(word) != nil
-    if measure(word.sub("ive", "")) > 1
+    if measure(word.sub(/ive$/, "")) > 1
       word.sub!(/ive$/, "")
     end
   elsif /ize$/.match(word) != nil
-    if measure(word.sub("ize", "")) > 1
+    if measure(word.sub(/ize$/, "")) > 1
       word.sub!(/ize$/, "")
     end
   end
@@ -331,9 +331,9 @@ def step_4(word)
 end
 
 def step_5a(word)
-  if measure(word.sub("e", "")) > 1 and /e$/.match(word) != nil
+  if measure(word.sub(/e$/, "")) > 1 and /e$/.match(word) != nil
     word.sub!(/e$/, "")
-  elsif measure(word.sub("e", "")) == 1 and not ends_with_cvc?(word.sub("e", "")) and /e$/.match(word) != nil
+  elsif measure(word.sub(/e$/, "")) == 1 and (not ends_with_cvc?(word.sub(/e$/, ""))) and /e$/.match(word) != nil
     word.sub!(/e$/, "")
   end
   

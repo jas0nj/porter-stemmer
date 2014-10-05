@@ -56,7 +56,7 @@ end
 # Where is consonant vowel consonant
 # And the second consonant is not w, x, or y.
 def ends_with_cvc?(word)
-  return result = (/.*[b-dfhj-np-tv-z][aeiouy][b-dfhj-np-tvz]$/.match(word) != nil)
+  return result = (/.*[b-df-hj-np-tv-z][aeiouy][b-df-hj-np-tvz]$/.match(word) != nil)
 end
 
 def step_1a(word)

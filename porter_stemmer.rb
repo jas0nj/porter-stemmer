@@ -88,50 +88,46 @@ def step_1a(word)
   return word
 end
 
+def step_1b_substep(word)
+  if /at$/.match(word) != nil
+    word.sub!(/at$/, "ate")
+  elsif /bl$/.match(word) != nil
+    word.sub!(/bl$/, "ble")
+  elsif /iz$/.match(word) != nil
+    word.sub!(/iz$/, "ize")
+  elsif ends_with_double?(word) and not (ends_with?(word, "l") or ends_with?(word, "s") or ends_with?(word, "z"))
+    # Get rid of last character.
+    word = word[0..word.length - 2]
+  elsif measure(word) == 1 and ends_with_cvc?(word)
+    word = word + "e"
+  end
+  
+  return word
+end
+
 # Step 1b of the algorithm.
 def step_1b(word)
   if /eed$/.match(word) != nil
     if measure(word.sub(/eed$/, "")) > 0
       word.sub!(/eed$/, "ee")
     end
-  elsif contains_vowel?(word.sub(/ed$/, "")) and /ed$/.match(word) != nil
-    word.sub!(/ed$/, "")
+  elsif /ed$/.match(word) != nil
+    if contains_vowel?(word.sub(/ed$/, ""))
+      word.sub!(/ed$/, "")
   
-    puts "After Step 1b1 #{word}" if DEBUG
+      puts "After Step 1b1 #{word}" if DEBUG
   
-    # TODO refactor
-    if /at$/.match(word) != nil
-      word.sub!(/at$/, "ate")
-    elsif /bl$/.match(word) != nil
-      word.sub!(/bl$/, "ble")
-    elsif /iz$/.match(word) != nil
-      word.sub!(/iz$/, "ize")
-    elsif ends_with_double?(word) and not (ends_with?(word, "l") or ends_with?(word, "s") or ends_with?(word, "z"))
-      # Get rid of last character.
-      word = word[0..word.length - 2]
-    elsif measure(word) == 1 and ends_with_cvc?(word)
-      word = word + "e"
+      word = step_1b_substep(word)
     end
+  elsif /ing$/.match(word) != nil
+    if contains_vowel?(word.sub(/ing$/, ""))
+      word.sub!(/ing$/, "")
   
-  elsif contains_vowel?(word.sub(/ing$/, "")) and /ing$/.match(word) != nil
-    word.sub!(/ing$/, "")
-  
-    puts "After Step 1b2 #{word}"  if DEBUG
+      puts "After Step 1b2 #{word}"  if DEBUG
     
-    puts "#{ends_with_double?(word)} and #{not (ends_with?(word, "l") or ends_with?(word, "s") or ends_with?(word, "z"))}" if DEBUG
+      puts "#{ends_with_double?(word)} and #{not (ends_with?(word, "l") or ends_with?(word, "s") or ends_with?(word, "z"))}" if DEBUG
   
-    # TODO refactor
-    if /at$/.match(word) != nil
-      word.sub!(/at$/, "ate")
-    elsif /bl$/.match(word) != nil
-      word.sub!(/bl$/, "ble")
-    elsif /iz$/.match(word) != nil
-      word.sub!(/iz$/, "ize")
-    elsif ends_with_double?(word) and not (ends_with?(word, "l") or ends_with?(word, "s") or ends_with?(word, "z"))
-      # Get rid of last character.
-      word = word[0..word.length - 2]
-    elsif measure(word) == 1 and ends_with_cvc?(word)
-      word = word + "e"
+      word = step_1b_substep(word)
     end
   end
   

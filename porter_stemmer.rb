@@ -3,6 +3,14 @@
 # Jason J
 # 4 October 2014
 
+# Set to true to enable debugging.
+DEBUG = false
+
+# Set to true to enable test cases.
+TEST = false
+
+MANUAL = false
+
 # Finds the measure of a word.
 # [C](VC)^m[V], where m is the measure.
 # TODO Does this apply to the entire string?
@@ -40,7 +48,8 @@ end
 
 # Does the word end with a double consonant?
 def ends_with_double?(word)
-  return result = (/.*([b-dfhj-np-tv-z]){2}$/.match(word) != nil)
+  # return result = (/.*([b-dfhj-np-tv-z])\1{2}$/.match(word) != nil)
+  return result = (/.*(?<consonant>[b-dfhj-np-tv-z])\k<consonant>$/.match(word) != nil)
 end
 
 # Does the word end with cvc?
@@ -72,7 +81,7 @@ def step_1b(word)
   elsif contains_vowel?(word.sub("ed", "")) and /ed$/.match(word) != nil
     word.sub!(/ed$/, "")
   
-    puts "After Step 1b1 #{word}"
+    puts "After Step 1b1 #{word}" if DEBUG
   
     # TODO refactor
     if /at$/.match(word) != nil
@@ -91,7 +100,7 @@ def step_1b(word)
   elsif contains_vowel?(word.sub("ing", "")) and /ing$/.match(word) != nil
     word.sub!(/ing$/, "")
   
-    puts "After Step 1b2 #{word}"
+    puts "After Step 1b2 #{word}"  if DEBUG
   
     # TODO refactor
     if /at$/.match(word) != nil
@@ -249,200 +258,240 @@ end
 
 def porter_stemmer(word)
   # Step 1a
-  step_1a(word)
-  puts "After Step 1a #{word}"
+  word = step_1a(word)
+  puts "After Step 1a #{word}" if DEBUG
 
   # Step 1b
-  step_1b(word)
-  puts "After Step 1b #{word}"
+  word = step_1b(word)
+  puts "After Step 1b #{word}" if DEBUG
   
   # Step 1c
-  step_1c(word)
-  puts "After Step 1c #{word}"
+  word = step_1c(word)
+  puts "After Step 1c #{word}" if DEBUG
   
   # Step 2
-  step_2(word)
-  puts "After Step 2 #{word}"
+  word = step_2(word)
+  puts "After Step 2 #{word}" if DEBUG
   
   # Step 3
-  step_3(word)
-  puts "After Step 3 #{word}"
+  word = step_3(word)
+  puts "After Step 3 #{word}" if DEBUG
 
   # Step 4
-  step_4(word)
-  puts "After Step 4 #{word}"
+  word = step_4(word)
+  puts "After Step 4 #{word}" if DEBUG
 
   # Step 5a
-  step_5a(word)
-  puts "After Step 5a #{word}"
+  word = step_5a(word)
+  puts "After Step 5a #{word}" if DEBUG
 
   # Step 5b
-  step_5b(word)
-  puts "After Step 5b #{word}"
+  word = step_5b(word)
+  puts "After Step 5b #{word}" if DEBUG
   
   return word
 end
 
-# Add some hashes with test cases.
-measure_test_cases = {
-  :tr => 0,
-  :ee => 0,
-  :tree => 0,
-  :y => 0,
-  :by => 0,
+if TEST
+  # Add some hashes with test cases.
+  measure_test_cases = {
+    :tr => 0,
+    :ee => 0,
+    :tree => 0,
+    :y => 0,
+    :by => 0,
   
-  :trouble => 1,
-  :oats => 1,
-  :trees => 1,
-  :ivy => 1,
+    :trouble => 1,
+    :oats => 1,
+    :trees => 1,
+    :ivy => 1,
   
-  :troubles => 2,
-  :private => 2,
-  :oaten => 2,
-  :orrery => 2
-}
+    :troubles => 2,
+    :private => 2,
+    :oaten => 2,
+    :orrery => 2
+  }
 
-step_1a_test_cases = {
-  :caresses => :caress,
-  :ponies => :poni,
-  :ties => :ti,
-  :caress => :caress,
-  :cats => :cat
-}
+  step_1a_test_cases = {
+    :caresses => :caress,
+    :ponies => :poni,
+    :ties => :ti,
+    :caress => :caress,
+    :cats => :cat
+  }
 
-step_1b_test_cases = {
-  :feed => :feed,
-  :agreed => :agree,
-  :plastered => :plaster,
-  :bled => :bled,
-  :motoring => :motor,
-  :sing => :sing,
+  step_1b_test_cases = {
+    :feed => :feed,
+    :agreed => :agree,
+    :plastered => :plaster,
+    :bled => :bled,
+    :motoring => :motor,
+    :sing => :sing,
   
-  :conflated => :conflate,
-  :troubling => :trouble,
-  :sized => :size,
-  :hopping => :hop,
-  :tanned => :tan,
-  :falling => :fall,
-  :hissing => :hiss,
-  :fizzed => :fizz,
-  :failing => :fail,
-  :filing => :file
-}
+    :conflated => :conflate,
+    :troubling => :trouble,
+    :sized => :size,
+    :hopping => :hop,
+    :tanned => :tan,
+    :falling => :fall,
+    :hissing => :hiss,
+    :fizzed => :fizz,
+    :failing => :fail,
+    :filing => :file
+  }
 
-step_1c_test_cases = {
-  :happy => :happi,
-  :sky => :sky
-}
+  step_1c_test_cases = {
+    :happy => :happi,
+    :sky => :sky
+  }
 
-step_2_test_cases = {
-  :relational => :relate,
-  :conditional => :condition,
-  :rational => :rational,
-  :valenci => :valence,
-  :hesitanci => :hesitance,
-  :digitizer => :digitize,
-  :conformabli => :conformable,
-  :radicalli => :radical,
-  :differentli => :different,
-  :vileli => :vile,
-  :analogousli => :analogous,
-  :vietnamization => :vietnamize,
-  :predication => :predicate,
-  :operator => :operate,
-  :feudalism => :feudal,
-  :decisiveness => :decisive,
-  :hopefulness => :hopeful,
-  :callousness => :callous,
-  :formaliti => :formal,
-  :sensitiviti => :sensitive,
-  :sensibiliti => :sensible
-}
+  step_2_test_cases = {
+    :relational => :relate,
+    :conditional => :condition,
+    :rational => :rational,
+    :valenci => :valence,
+    :hesitanci => :hesitance,
+    :digitizer => :digitize,
+    :conformabli => :conformable,
+    :radicalli => :radical,
+    :differentli => :different,
+    :vileli => :vile,
+    :analogousli => :analogous,
+    :vietnamization => :vietnamize,
+    :predication => :predicate,
+    :operator => :operate,
+    :feudalism => :feudal,
+    :decisiveness => :decisive,
+    :hopefulness => :hopeful,
+    :callousness => :callous,
+    :formaliti => :formal,
+    :sensitiviti => :sensitive,
+    :sensibiliti => :sensible
+  }
 
-step_3_test_cases = {
-  :triplicate => :triplic,
-  :formative => :form,
-  :formalize => :formal,
-  :electriciti => :electric,
-  :electrical => :electric,
-  :hopeful => :hope,
-  :goodness => :good
-}
+  step_3_test_cases = {
+    :triplicate => :triplic,
+    :formative => :form,
+    :formalize => :formal,
+    :electriciti => :electric,
+    :electrical => :electric,
+    :hopeful => :hope,
+    :goodness => :good
+  }
 
-step_4_test_cases = {
-  :revival => :reviv,
-  :allowance => :allow,
-  :inference => :infer,
-  :airliner => :airlin,
-  :gyroscopic => :gyroscop,
-  :adjustable => :adjust,
-  :defensible => :defens,
-  :irritant => :irrit,
-  :replacement => :replac,
-  :adjustment => :adjust,
-  :dependent => :depend,
-  :adoption => :adopt,
-  :homologou => :homolog,
-  :communism => :commun,
-  :activate => :activ,
-  :angulariti => :angular,
-  :homologous => :homolog,
-  :effective => :effect,
-  :bowdlerize => :bowdler
-}
+  step_4_test_cases = {
+    :revival => :reviv,
+    :allowance => :allow,
+    :inference => :infer,
+    :airliner => :airlin,
+    :gyroscopic => :gyroscop,
+    :adjustable => :adjust,
+    :defensible => :defens,
+    :irritant => :irrit,
+    :replacement => :replac,
+    :adjustment => :adjust,
+    :dependent => :depend,
+    :adoption => :adopt,
+    :homologou => :homolog,
+    :communism => :commun,
+    :activate => :activ,
+    :angulariti => :angular,
+    :homologous => :homolog,
+    :effective => :effect,
+    :bowdlerize => :bowdler
+  }
 
-step_5a_test_cases = {
-  :probate => :probat,
-  :rate => :rate,
-  :cease => :ceas
-}
+  step_5a_test_cases = {
+    :probate => :probat,
+    :rate => :rate,
+    :cease => :ceas
+  }
 
-step_5b_test_cases = {
-  :controll => :control,
-  :roll => :roll
-}
+  step_5b_test_cases = {
+    :controll => :control,
+    :roll => :roll
+  }
 
-# Print out if any of the test cases fail.
-measure_test_cases.each do |key, value|
-  puts "#{key.to_s} FAILS" if measure(key.to_s) != value
+  # Print out if any of the test cases fail.
+  measure_test_cases.each do |key, value|
+    puts "#{key.to_s} FAILS" if measure(key.to_s) != value
+  end
+
+  step_1a_test_cases.each do |key, value|
+    puts "#{key.to_s} FAILS" if step_1a(key.to_s) != value.to_s
+  end
+
+  step_1b_test_cases.each do |key, value|
+    puts "#{key.to_s} FAILS" if step_1b(key.to_s) != value.to_s
+  end
+
+  step_1c_test_cases.each do |key, value|
+    puts "#{key.to_s} FAILS" if step_1c(key.to_s) != value.to_s
+  end
+
+  step_2_test_cases.each do |key, value|
+    puts "#{key.to_s} FAILS" if step_2(key.to_s) != value.to_s
+  end
+
+  step_3_test_cases.each do |key, value|
+    puts "#{key.to_s} FAILS" if step_3(key.to_s) != value.to_s
+  end
+
+  step_4_test_cases.each do |key, value|
+    puts "#{key.to_s} FAILS" if step_4(key.to_s) != value.to_s
+  end
+
+  step_5a_test_cases.each do |key, value|
+    puts "#{key.to_s} FAILS" if step_5a(key.to_s) != value.to_s
+  end
+
+  step_5b_test_cases.each do |key, value|
+    puts "#{key.to_s} FAILS" if step_5b(key.to_s) != value.to_s
+  end
 end
 
-step_1a_test_cases.each do |key, value|
-  puts "#{key.to_s} FAILS" if step_1a(key.to_s) != value.to_s
+if MANUAL
+  # Manually enter a word.
+  puts "Enter a word"
+  word = gets.chomp
+  s = word + ""
+
+  puts "measure(#{word}) = #{measure(word)}"
+  puts "porter_stemmer(#{word}) = #{porter_stemmer(s)}"
+else
+  # Run on specific files.
+  # Open up the vocabulary file.
+  file = File.open("voc.txt", "rb")
+  vocabulary_string = file.read
+  file.close
+
+  # Store the vocabulary as an array.
+  vocabulary = vocabulary_string.split("\n")
+
+  # Open up the correct output file.
+  file = File.open("output.txt", "rb")
+  correct_output_string = file.read
+  file.close
+
+  # Store the correct output as an array.
+  correct_output = correct_output_string.split("\n")
+
+  # Keep track of how many don't match.
+  wrong_count = 0
+
+  # Go through each item in the vocabulary,
+  # See if the stemmer's output matches the correct output.
+  for i in 0...vocabulary.length
+    copy = vocabulary[i] + ""
+    copy = porter_stemmer(copy)
+    #puts "word: #{vocabulary[i]}\tcorrect: #{correct_output[i]}\tstemmed: #{copy}" if copy != correct_output[i]
+    printf("%15s\t%15s\t%15s\n", vocabulary[i], correct_output[i], copy) if copy != correct_output[i]
+    wrong_count += 1 if copy != correct_output[i]
+  end
+
+  # Calculate the success rate.
+  success_rate = 1.0 - wrong_count.to_f / vocabulary.length.to_f
+
+  # Display the success rate.
+  puts "Rate: #{wrong_count} / #{vocabulary.length} = #{success_rate}"
 end
-
-step_1b_test_cases.each do |key, value|
-  puts "#{key.to_s} FAILS" if step_1b(key.to_s) != value.to_s
-end
-
-step_1c_test_cases.each do |key, value|
-  puts "#{key.to_s} FAILS" if step_1c(key.to_s) != value.to_s
-end
-
-step_2_test_cases.each do |key, value|
-  puts "#{key.to_s} FAILS" if step_2(key.to_s) != value.to_s
-end
-
-step_3_test_cases.each do |key, value|
-  puts "#{key.to_s} FAILS" if step_3(key.to_s) != value.to_s
-end
-
-step_4_test_cases.each do |key, value|
-  puts "#{key.to_s} FAILS" if step_4(key.to_s) != value.to_s
-end
-
-step_5a_test_cases.each do |key, value|
-  puts "#{key.to_s} FAILS" if step_5a(key.to_s) != value.to_s
-end
-
-step_5b_test_cases.each do |key, value|
-  puts "#{key.to_s} FAILS" if step_5b(key.to_s) != value.to_s
-end
-
-puts "Enter a word"
-word = gets.chomp
-s = word + ""
-
-puts "measure(#{word}) = #{measure(word)}"
-
-puts "porter_stemmer(#{word}) = #{porter_stemmer(s)}"

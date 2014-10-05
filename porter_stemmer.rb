@@ -65,9 +65,10 @@ def porter_stemmer(word)
   puts "After Step 1a #{word}"
 
   # Step 1b
-  # TODO Logic error: via rules "feed" matches if, but via if matches elsif..... this is causing "feed" to get stemmed to "fe"
-  if measure(word.sub("eed", "")) > 0 and /eed$/.match(word) != nil
-    word.sub!(/eed$/, "ee")
+  if /eed$/.match(word) != nil
+    if measure(word.sub("eed", "")) > 0
+      word.sub!(/eed$/, "ee")
+    end
   elsif contains_vowel?(word.sub("ed", "")) and /ed$/.match(word) != nil
     word.sub!(/ed$/, "")
   

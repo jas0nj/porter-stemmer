@@ -34,8 +34,8 @@ def ends_with?(word, letter)
 end
 
 # Does the stem contain a vowel?
-def contains_vowel?(stem, suffix)
-  return result = (/^.*[aeiouy].*#{suffix}$/.match(stem) != nil)
+def contains_vowel?(stem)
+  return result = (/^.*[aeiouy].*$/.match(stem) != nil)
 end
 
 # Does the word end with a double consonant?
@@ -65,9 +65,10 @@ def porter_stemmer(word)
   puts "After Step 1a #{word}"
 
   # Step 1b
-  if measure(word) > 0 and /eed$/.match(word) != nil
+  # TODO Logic error: via rules "feed" matches if, but via if matches elsif..... this is causing "feed" to get stemmed to "fe"
+  if measure(word.sub("eed", "")) > 0 and /eed$/.match(word) != nil
     word.sub!(/eed$/, "ee")
-  elsif contains_vowel?(word, "ed") and /ed$/.match(word) != nil
+  elsif contains_vowel?(word.sub("ed", "")) and /ed$/.match(word) != nil
     word.sub!(/ed$/, "")
   
     puts "After Step 1b1 #{word}"
@@ -86,7 +87,7 @@ def porter_stemmer(word)
       word = word + "e"
     end
   
-  elsif contains_vowel?(word, "ing") and /ing$/.match(word) != nil
+  elsif contains_vowel?(word.sub("ing", "")) and /ing$/.match(word) != nil
     word.sub!(/ing$/, "")
   
     puts "After Step 1b2 #{word}"
@@ -107,127 +108,123 @@ def porter_stemmer(word)
   end
   
   # Step 1c
-  if contains_vowel?(word, "y") and ends_with?(word, "y")
+  if contains_vowel?(word.sub("y", "")) and ends_with?(word, "y")
     word.sub!(/y$/, "i")
   end
   
   puts "After Step 1c #{word}"
   
   # Step 2
-  if measure(word) > 0 and /ational$/.match(word) != nil
+  if measure(word.sub("ational", "")) > 0 and /ational$/.match(word) != nil
     word.sub!(/ational$/, "ate")
-  # TODO "rational" fails
-  elsif measure(word) > 0 and /tional$/.match(word) != nil
+  elsif measure(word.sub("tional", "")) > 0 and /tional$/.match(word) != nil
     word.sub!(/tional$/, "tion")
-  elsif measure(word) > 0 and /enci$/.match(word) != nil
+  elsif measure(word.sub("enci", "")) > 0 and /enci$/.match(word) != nil
     word.sub!(/enci$/, "ence")
-  elsif measure(word) > 0 and /anci$/.match(word) != nil
+  elsif measure(word.sub("anci", "")) > 0 and /anci$/.match(word) != nil
     word.sub!(/anci$/, "ance")
-  elsif measure(word) > 0 and /izer$/.match(word) != nil
+  elsif measure(word.sub("izer", "")) > 0 and /izer$/.match(word) != nil
     word.sub!(/izer$/, "ize")
-  elsif measure(word) > 0 and /abli$/.match(word) != nil
+  elsif measure(word.sub("abli", "")) > 0 and /abli$/.match(word) != nil
     word.sub!(/abli$/, "able")
-  elsif measure(word) > 0 and /alli$/.match(word) != nil
+  elsif measure(word.sub("alli", "")) > 0 and /alli$/.match(word) != nil
     word.sub!(/alli$/, "al")
-  elsif measure(word) > 0 and /entli$/.match(word) != nil
+  elsif measure(word.sub("entli", "")) > 0 and /entli$/.match(word) != nil
     word.sub!(/entli$/, "ent")
-  elsif measure(word) > 0 and /eli$/.match(word) != nil
+  elsif measure(word.sub("eli", "")) > 0 and /eli$/.match(word) != nil
     word.sub!(/eli$/, "e")
-  elsif measure(word) > 0 and /ousli$/.match(word) != nil
+  elsif measure(word.sub("ousli", "")) > 0 and /ousli$/.match(word) != nil
     word.sub!(/ousli$/, "ous")
-  elsif measure(word) > 0 and /ization$/.match(word) != nil
+  elsif measure(word.sub("ization", "")) > 0 and /ization$/.match(word) != nil
     word.sub!(/ization$/, "ize")
-  elsif measure(word) > 0 and /ation$/.match(word) != nil
+  elsif measure(word.sub("ation", "")) > 0 and /ation$/.match(word) != nil
     word.sub!(/ation$/, "ate")
-  elsif measure(word) > 0 and /ator$/.match(word) != nil
+  elsif measure(word.sub("ator", "")) > 0 and /ator$/.match(word) != nil
     word.sub!(/ator$/, "ate")
-  elsif measure(word) > 0 and /alism$/.match(word) != nil
+  elsif measure(word.sub("alism", "")) > 0 and /alism$/.match(word) != nil
     word.sub!(/alism$/, "al")
-  elsif measure(word) > 0 and /iveness$/.match(word) != nil
+  elsif measure(word.sub("iveness", "")) > 0 and /iveness$/.match(word) != nil
     word.sub!(/iveness$/, "ive")
-  elsif measure(word) > 0 and /fulness$/.match(word) != nil
+  elsif measure(word.sub("fulness", "")) > 0 and /fulness$/.match(word) != nil
     word.sub!(/fulness$/, "ful")
-  elsif measure(word) > 0 and /ousness$/.match(word) != nil
+  elsif measure(word.sub("ousness", "")) > 0 and /ousness$/.match(word) != nil
     word.sub!(/ousness$/, "ous")
-  elsif measure(word) > 0 and /aliti$/.match(word) != nil
+  elsif measure(word.sub("aliti", "")) > 0 and /aliti$/.match(word) != nil
     word.sub!(/aliti$/, "al")
-  elsif measure(word) > 0 and /iviti$/.match(word) != nil
+  elsif measure(word.sub("iviti", "")) > 0 and /iviti$/.match(word) != nil
     word.sub!(/iviti$/, "ive")
-  elsif measure(word) > 0 and /biliti$/.match(word) != nil
+  elsif measure(word.sub("biliti", "")) > 0 and /biliti$/.match(word) != nil
     word.sub!(/biliti$/, "ble")
   end
   
   puts "After Step 2 #{word}"
   
   # Step 3
-  if measure(word) > 0 and /icate$/.match(word) != nil
+  if measure(word.sub("icate", "")) > 0 and /icate$/.match(word) != nil
     word.sub!(/icate$/, "ic")
-  elsif measure(word) > 0 and /ative$/.match(word) != nil
+  elsif measure(word.sub("ative", "")) > 0 and /ative$/.match(word) != nil
     word.sub!(/ative$/, "")
-  elsif measure(word) > 0 and /alize$/.match(word) != nil
+  elsif measure(word.sub("alize", "")) > 0 and /alize$/.match(word) != nil
     word.sub!(/alize$/, "al")
-  elsif measure(word) > 0 and /iciti$/.match(word) != nil
+  elsif measure(word.sub("iciti", "")) > 0 and /iciti$/.match(word) != nil
     word.sub!(/iciti$/, "ic")
-  elsif measure(word) > 0 and /ical$/.match(word) != nil
+  elsif measure(word.sub("ical", "")) > 0 and /ical$/.match(word) != nil
     word.sub!(/ical$/, "ic")
-  elsif measure(word) > 0 and /ful$/.match(word) != nil
+  elsif measure(word.sub("ful", "")) > 0 and /ful$/.match(word) != nil
     word.sub!(/ful$/, "")
-  # TODO "goodness" fails
-  elsif measure(word) > 0 and /ness$/.match(word) != nil
+  elsif measure(word.sub("ness", "")) > 0 and /ness$/.match(word) != nil
     word.sub!(/ness$/, "")
   end
   
   puts "After Step 3 #{word}"
 
   # Step 4
-  if measure(word) > 1 and /al$/.match(word) != nil
+  if measure(word.sub("al", "")) > 1 and /al$/.match(word) != nil
     word.sub!(/al$/, "")
-  elsif measure(word) > 1 and /ance$/.match(word) != nil
+  elsif measure(word.sub("ance", "")) > 1 and /ance$/.match(word) != nil
     word.sub!(/ance$/, "")
-  elsif measure(word) > 1 and /ence$/.match(word) != nil
+  elsif measure(word.sub("ence", "")) > 1 and /ence$/.match(word) != nil
     word.sub!(/ence$/, "")
-  elsif measure(word) > 1 and /er$/.match(word) != nil
+  elsif measure(word.sub("er", "")) > 1 and /er$/.match(word) != nil
     word.sub!(/er$/, "")
-  elsif measure(word) > 1 and /ic$/.match(word) != nil
+  elsif measure(word.sub("ic", "")) > 1 and /ic$/.match(word) != nil
     word.sub!(/ic$/, "")
-  elsif measure(word) > 1 and /able$/.match(word) != nil
+  elsif measure(word.sub("able", "")) > 1 and /able$/.match(word) != nil
     word.sub!(/able$/, "")
-  elsif measure(word) > 1 and /ible$/.match(word) != nil
+  elsif measure(word.sub("ible", "")) > 1 and /ible$/.match(word) != nil
     word.sub!(/ible$/, "")
-  elsif measure(word) > 1 and /ant$/.match(word) != nil
+  elsif measure(word.sub("ant", "")) > 1 and /ant$/.match(word) != nil
     word.sub!(/ant$/, "")
-  elsif measure(word) > 1 and /ement$/.match(word) != nil
+  elsif measure(word.sub("ement", "")) > 1 and /ement$/.match(word) != nil
     word.sub!(/ement$/, "")
-  elsif measure(word) > 1 and /ment$/.match(word) != nil
+  elsif measure(word.sub("ment", "")) > 1 and /ment$/.match(word) != nil
     word.sub!(/ment$/, "")
-  elsif measure(word) > 1 and /ent$/.match(word) != nil
+  elsif measure(word.sub("ent", "")) > 1 and /ent$/.match(word) != nil
     word.sub!(/ent$/, "")
-  # TODO "adoption" fails
-  elsif measure(word) > 1 and (ends_with?(word, "s") or ends_with?(word, "t")) and /ion$/.match(word) != nil
+  elsif measure(word.sub("ion", "")) > 1 and (ends_with?(word.sub("ion", ""), "s") or ends_with?(word.sub("ion", ""), "t")) and /ion$/.match(word) != nil
     word.sub!(/ion$/, "")
-  elsif measure(word) > 1 and /ou$/.match(word) != nil
+  elsif measure(word.sub("ou", "")) > 1 and /ou$/.match(word) != nil
     word.sub!(/ou$/, "")
-  elsif measure(word) > 1 and /ism$/.match(word) != nil
+  elsif measure(word.sub("ism", "")) > 1 and /ism$/.match(word) != nil
     word.sub!(/ism$/, "")
-  elsif measure(word) > 1 and /ate$/.match(word) != nil
+  elsif measure(word.sub("ate", "")) > 1 and /ate$/.match(word) != nil
     word.sub!(/ate$/, "")
-  elsif measure(word) > 1 and /iti$/.match(word) != nil
+  elsif measure(word.sub("iti", "")) > 1 and /iti$/.match(word) != nil
     word.sub!(/iti$/, "")
-  elsif measure(word) > 1 and /ous$/.match(word) != nil
+  elsif measure(word.sub("ous", "")) > 1 and /ous$/.match(word) != nil
     word.sub!(/ous$/, "")
-  elsif measure(word) > 1 and /ive$/.match(word) != nil
+  elsif measure(word.sub("ive", "")) > 1 and /ive$/.match(word) != nil
     word.sub!(/ive$/, "")
-  elsif measure(word) > 1 and /ize$/.match(word) != nil
+  elsif measure(word.sub("ize", "")) > 1 and /ize$/.match(word) != nil
     word.sub!(/ize$/, "")
   end
   
   puts "After Step 4 #{word}"
 
   # Step 5a
-  # TODO fails on "probate" and "rate"
-  if measure(word) > 1 and /e$/.match(word) != nil
+  if measure(word.sub("e", "")) > 1 and /e$/.match(word) != nil
     word.sub!(/e$/, "")
-  elsif measure(word) == 1 and not ends_with_cvc?(word) and /e$/.match(word) != nil
+  elsif measure(word.sub("e", "")) == 1 and not ends_with_cvc?(word.sub("e", "")) and /e$/.match(word) != nil
     word.sub!(/e$/, "")
   end
   
@@ -241,6 +238,30 @@ def porter_stemmer(word)
   puts "After Step 5b #{word}"
   
   return word
+end
+
+# Add some hashes with test cases.
+measure_test_cases = {
+  :tr => 0,
+  :ee => 0,
+  :tree => 0,
+  :y => 0,
+  :by => 0,
+  
+  :trouble => 1,
+  :oats => 1,
+  :trees => 1,
+  :ivy => 1,
+  
+  :troubles => 2,
+  :private => 2,
+  :oaten => 2,
+  :orrery => 2,
+}
+
+# Print out if any of the test cases fail.
+measure_test_cases.each do |key, value|
+  puts "#{key.to_s} FAILS" if measure(key.to_s) != value
 end
 
 puts "Enter a word"

@@ -19,13 +19,19 @@ MANUAL = false
 def measure(word)
   measure = 10
   
+  # There's really two ys.
+  # One y is a consonant and the other is a vowel.
+  # Vowel y is defined to be y when preceded by a consonant.
+  # Make a copy of the word and replace any vowel y with a special symbols, ¥.
+  # TODO For now, just replace the constant with "c".
+  copy = word + ""
+  copy.sub!(/[b-df-hj-np-tvxz]y/, "c¥")
+  
   # Find the smallest i that matches.
   # TODO Guessing 5 is big enough?
   for i in 0..10
-    # TODO y is in both consonants and vowels
-    # TODO maybe use other symbol for one case?
     # TODO Use \A and \Z or ^ and $?
-   if /^[b-df-hj-np-tv-z]*([aeiouy]+[b-df-hj-np-tv-z]+){#{i}}[aeiouy]*$/.match(word) != nil
+   if /^[b-df-hj-np-tv-z]*([aeiou¥]+[b-df-hj-np-tv-z]+){#{i}}[aeiou¥]*$/.match(copy) != nil
      # Found an i that matches, it's the measure.
      measure = i
      break
@@ -43,7 +49,12 @@ end
 
 # Does the stem contain a vowel?
 def contains_vowel?(stem)
-  return result = (/^.*[aeiouy].*$/.match(stem) != nil)
+  # See comment above for explanation of this.
+  # TODO For now, just replace the constant with "c".
+  copy = stem + ""
+  copy.sub!(/[b-df-hj-np-tvxz]y/, "c¥")
+  
+  return result = (/^.*[aeiou¥].*$/.match(copy) != nil)
 end
 
 # Does the word end with a double consonant?

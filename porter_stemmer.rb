@@ -1,7 +1,11 @@
+################################################################################
 # Porter Stemmer
+#
 # Based on algorithm described in Porter 80.
-# Jason J
-# 4 October 2014
+#
+# Author: Jason J
+# Start: 4 October 2014
+################################################################################
 
 # Set to true to enable debugging.
 DEBUG = false
@@ -9,14 +13,13 @@ DEBUG = false
 # Set to true to enable test cases.
 TEST = false
 
+# Manually enter a word or run over the text files?
 MANUAL = false
 
 # Finds the measure of a word.
 # [C](VC)^m[V], where m is the measure.
-# TODO Does this apply to the entire string?
-# TODO OR just the part not including the suffix?
-# TODO not working for "goodness"
 def measure(word)
+  # TODO Kinda a magic number..
   measure = 10
   
   # There's really two ys.
@@ -28,7 +31,7 @@ def measure(word)
   copy.sub!(/[b-df-hj-np-tvxz]y/, "c¥")
   
   # Find the smallest i that matches.
-  # TODO Guessing 5 is big enough?
+  # TODO Guessing 10 is big enough?
   for i in 0..10
     # TODO Use \A and \Z or ^ and $?
    if /^[b-df-hj-np-tv-z]*([aeiou¥]+[b-df-hj-np-tv-z]+){#{i}}[aeiou¥]*$/.match(copy) != nil
@@ -70,6 +73,7 @@ def ends_with_cvc?(word)
   return result = (/.*[b-df-hj-np-tv-z][aeiouy][b-df-hj-np-tvz]$/.match(word) != nil)
 end
 
+# Step 1a of the algorithm.
 def step_1a(word)
   if /sses$/.match(word) != nil
     word.sub!(/sses$/, "ss")
@@ -84,6 +88,7 @@ def step_1a(word)
   return word
 end
 
+# Step 1b of the algorithm.
 def step_1b(word)
   if /eed$/.match(word) != nil
     if measure(word.sub(/eed$/, "")) > 0
@@ -133,6 +138,7 @@ def step_1b(word)
   return word
 end
 
+# Step 1c of the algorithm.
 def step_1c(word)
   if contains_vowel?(word.sub("y", "")) and ends_with?(word, "y")
     word.sub!(/y$/, "i")
@@ -141,6 +147,7 @@ def step_1c(word)
   return word
 end
 
+# Step 2 of the algorithm.
 def step_2(word)
   if /ational$/.match(word) != nil
     if measure(word.sub(/ational$/, "")) > 0
@@ -227,6 +234,7 @@ def step_2(word)
   return word
 end
 
+# Step 3 of the algorithm.
 def step_3(word)
   if /icate$/.match(word) != nil
     if measure(word.sub(/icate$/, "")) > 0
@@ -261,6 +269,7 @@ def step_3(word)
   return word
 end
 
+# Step 4 of the algorithm.
 def step_4(word)
   if /al$/.match(word) != nil
     if measure(word.sub(/al$/, "")) > 1
@@ -343,6 +352,7 @@ def step_4(word)
   return word
 end
 
+# Step 5a of the algorithm.
 def step_5a(word)
   puts "#{measure(word.sub(/e$/, "")) == 1} and #{(not ends_with_cvc?(word.sub(/e$/, "")))} and #{/e$/.match(word) != nil}" if DEBUG
   if measure(word.sub(/e$/, "")) > 1 and /e$/.match(word) != nil
@@ -354,6 +364,7 @@ def step_5a(word)
   return word
 end
 
+# Step 5b of the algorithm.
 def step_5b(word)
   if measure(word) > 1 and ends_with_double?(word) and ends_with?(word, "l")
     word = word[0..word.length - 2]
@@ -362,6 +373,7 @@ def step_5b(word)
   return word
 end
 
+# Porter stemmer algorithm.
 def porter_stemmer(word)
   # Step 1a
   word = step_1a(word)

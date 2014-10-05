@@ -49,7 +49,7 @@ end
 # Does the word end with a double consonant?
 def ends_with_double?(word)
   # return result = (/.*([b-dfhj-np-tv-z])\1{2}$/.match(word) != nil)
-  return result = (/.*(?<consonant>[b-dfhj-np-tv-z])\k<consonant>$/.match(word) != nil)
+  return result = (/.*(?<consonant>[b-df-hj-np-tv-z])\k<consonant>$/.match(word) != nil)
 end
 
 # Does the word end with cvc?
@@ -101,6 +101,8 @@ def step_1b(word)
     word.sub!(/ing$/, "")
   
     puts "After Step 1b2 #{word}"  if DEBUG
+    
+    puts "#{ends_with_double?(word)} and #{not (ends_with?(word, "l") or ends_with?(word, "s") or ends_with?(word, "z"))}" if DEBUG
   
     # TODO refactor
     if /at$/.match(word) != nil
@@ -331,6 +333,7 @@ def step_4(word)
 end
 
 def step_5a(word)
+  puts "#{measure(word.sub(/e$/, "")) == 1} and #{(not ends_with_cvc?(word.sub(/e$/, "")))} and #{/e$/.match(word) != nil}" if DEBUG
   if measure(word.sub(/e$/, "")) > 1 and /e$/.match(word) != nil
     word.sub!(/e$/, "")
   elsif measure(word.sub(/e$/, "")) == 1 and (not ends_with_cvc?(word.sub(/e$/, ""))) and /e$/.match(word) != nil

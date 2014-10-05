@@ -140,7 +140,7 @@ end
 
 # Step 1c of the algorithm.
 def step_1c(word)
-  if contains_vowel?(word.sub("y", "")) and ends_with?(word, "y")
+  if contains_vowel?(word.sub(/y$/, "")) and ends_with?(word, "y")
     word.sub!(/y$/, "i")
   end
   
@@ -316,7 +316,7 @@ def step_4(word)
       word.sub!(/ent$/, "")
     end
   elsif /ion$/.match(word) != nil
-    if measure(word.sub(/ion$/, "")) > 1 and (ends_with?(word.sub("ion", ""), "s") or ends_with?(word.sub("ion", ""), "t"))
+    if measure(word.sub(/ion$/, "")) > 1 and (ends_with?(word.sub(/ion$/, ""), "s") or ends_with?(word.sub(/ion$/, ""), "t"))
       word.sub!(/ion$/, "")
     end
   elsif /ou$/.match(word) != nil
@@ -355,10 +355,13 @@ end
 # Step 5a of the algorithm.
 def step_5a(word)
   puts "#{measure(word.sub(/e$/, "")) == 1} and #{(not ends_with_cvc?(word.sub(/e$/, "")))} and #{/e$/.match(word) != nil}" if DEBUG
-  if measure(word.sub(/e$/, "")) > 1 and /e$/.match(word) != nil
-    word.sub!(/e$/, "")
-  elsif measure(word.sub(/e$/, "")) == 1 and (not ends_with_cvc?(word.sub(/e$/, ""))) and /e$/.match(word) != nil
-    word.sub!(/e$/, "")
+  
+  if /e$/.match(word) != nil
+    if measure(word.sub(/e$/, "")) > 1
+      word.sub!(/e$/, "")
+    elsif measure(word.sub(/e$/, "")) == 1 and (not ends_with_cvc?(word.sub(/e$/, "")))
+      word.sub!(/e$/, "")
+    end
   end
   
   return word

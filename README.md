@@ -10,14 +10,33 @@ Currently, the stemmer correctly stems the sample English vocabulary from voc.tx
 
 http://snowball.tartarus.org/algorithms/porter/stemmer.html
 
-To-Do List:
+
+Instructions
+--------------
+To stem a word,
+```
+ruby porter_stemmer.rb -w hello
+```
+
+To stem a file,
+```
+ruby porter_stemmer.rb -f voc.txt
+```
+
+To compare a file with vocabulary and a golden (correct) file,
+```
+ruby porter_stemmer.rb -c voc.txt output.txt
+```
+
+
+To-Do List
 --------------
 
 * Add command line options for
-  * Passing in a file to stem
-  * Passing in a corresponding correct output file
-  * Passing an individual word to stem
-  * Enabling testing
-  * Enabling ebugging
+  * ~~Passing in a file to stem~~
+  * ~~Passing in a corresponding correct output file~~
+  * ~~Passing an individual word to stem~~
+  * ~~Enabling testing~~
+  * ~~Enabling ebugging~~
   * Maybe some others that I'm not thinking of at the moment
 * Consider possible ways to make it more efficient

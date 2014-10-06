@@ -7,14 +7,57 @@
 # Start: 4 October 2014
 ################################################################################
 
-# Set to true to enable debugging.
-DEBUG = false
+# Set to true to enable $debugging.
+$debugging = false
 
 # Set to true to enable test cases.
-TEST = false
+$testing = false
 
-# Manually enter a word or run over the text files?
-MANUAL = false
+# User enters a word from the commandline.
+$word_mode = false
+$user_word = ""
+
+# User enters a file from the commandline.
+$file_mode = false
+$user_file = ""
+
+# User passes in two files: a vocabulary and a golden (correct) stems
+$compare_mode = false
+$user_vocabulary_file
+$user_golden_file
+
+
+# -h for help
+# -w for word
+# -f for file
+# -c for compare
+# -d for debugging
+# -t for testing
+
+# Process the commandline arguments.
+ARGV.each_with_index do |argument, i|
+  # If it's a switch argument.
+  if /^-/.match(argument) != nil
+    # If it's the -h switch.
+    if /^-h$/.match(argument) != nil
+      puts "Here's some help"
+    elsif /^-w$/.match(argument) != nil
+      $word_mode = true
+      $user_word = ARGV[i + 1]
+    elsif /^-f$/.match(argument) != nil
+      $file_mode = true
+      $user_file = ARGV[i + 1]
+    elsif /^-c$/.match(argument) != nil
+      $compare_mode = true
+      $user_vocabulary_file = ARGV[i + 1]
+      $user_golden_file = ARGV[i + 2]
+    elsif /^-d$/.match(argument) != nil
+      $debugging = true
+    elsif /^-t$/.match(argument) != nil
+      $testing = true
+    end
+  end
+end
 
 # Finds the measure of a word.
 # [C](VC)^m[V], where m is the measure.
@@ -115,7 +158,7 @@ def step_1b(word)
     if contains_vowel?(word.sub(/ed$/, ""))
       word.sub!(/ed$/, "")
   
-      puts "After Step 1b1 #{word}" if DEBUG
+      puts "After Step 1b1 #{word}" if $debugging
   
       word = step_1b_substep(word)
     end
@@ -123,9 +166,9 @@ def step_1b(word)
     if contains_vowel?(word.sub(/ing$/, ""))
       word.sub!(/ing$/, "")
   
-      puts "After Step 1b2 #{word}"  if DEBUG
+      puts "After Step 1b2 #{word}"  if $debugging
     
-      puts "#{ends_with_double?(word)} and #{not (ends_with?(word, "l") or ends_with?(word, "s") or ends_with?(word, "z"))}" if DEBUG
+      puts "#{ends_with_double?(word)} and #{not (ends_with?(word, "l") or ends_with?(word, "s") or ends_with?(word, "z"))}" if $debugging
   
       word = step_1b_substep(word)
     end
@@ -350,7 +393,7 @@ end
 
 # Step 5a of the algorithm.
 def step_5a(word)
-  puts "#{measure(word.sub(/e$/, "")) == 1} and #{(not ends_with_cvc?(word.sub(/e$/, "")))} and #{/e$/.match(word) != nil}" if DEBUG
+  puts "#{measure(word.sub(/e$/, "")) == 1} and #{(not ends_with_cvc?(word.sub(/e$/, "")))} and #{/e$/.match(word) != nil}" if $debugging
   
   if /e$/.match(word) != nil
     if measure(word.sub(/e$/, "")) > 1
@@ -376,40 +419,40 @@ end
 def porter_stemmer(word)
   # Step 1a
   word = step_1a(word)
-  puts "After Step 1a #{word}" if DEBUG
+  puts "After Step 1a #{word}" if $debugging
 
   # Step 1b
   word = step_1b(word)
-  puts "After Step 1b #{word}" if DEBUG
+  puts "After Step 1b #{word}" if $debugging
   
   # Step 1c
   word = step_1c(word)
-  puts "After Step 1c #{word}" if DEBUG
+  puts "After Step 1c #{word}" if $debugging
   
   # Step 2
   word = step_2(word)
-  puts "After Step 2 #{word}" if DEBUG
+  puts "After Step 2 #{word}" if $debugging
   
   # Step 3
   word = step_3(word)
-  puts "After Step 3 #{word}" if DEBUG
+  puts "After Step 3 #{word}" if $debugging
 
   # Step 4
   word = step_4(word)
-  puts "After Step 4 #{word}" if DEBUG
+  puts "After Step 4 #{word}" if $debugging
 
   # Step 5a
   word = step_5a(word)
-  puts "After Step 5a #{word}" if DEBUG
+  puts "After Step 5a #{word}" if $debugging
 
   # Step 5b
   word = step_5b(word)
-  puts "After Step 5b #{word}" if DEBUG
+  puts "After Step 5b #{word}" if $debugging
   
   return word
 end
 
-if TEST
+if $testing
   # Add some hashes with test cases.
   measure_test_cases = {
     :tr => 0,
@@ -567,48 +610,96 @@ if TEST
   end
 end
 
-if MANUAL
+if $word_mode
   # Manually enter a word.
-  puts "Enter a word"
-  word = gets.chomp
-  s = word + ""
+  # puts "Enter a word"
+  # word = gets.chomp
+  word = $user_word + ""
+  stem = porter_stemmer(word)
 
-  puts "measure(#{word}) = #{measure(word)}"
-  puts "porter_stemmer(#{word}) = #{porter_stemmer(s)}"
-else
-  # Run on specific files.
-  # Open up the vocabulary file.
-  file = File.open("voc.txt", "rb")
+  # puts "measure(#{$user_word}) = #{measure($user_word)}"
+  # puts "porter_stemmer(#{$user_word}) = #{porter_stemmer(word_copy)}"
+  puts "#{stem}"
+elsif $file_mode
+  file = File.open($user_file, "rb")
   vocabulary_string = file.read
   file.close
-
+  
   # Store the vocabulary as an array.
   vocabulary = vocabulary_string.split("\n")
-
-  # Open up the correct output file.
-  file = File.open("output.txt", "rb")
-  correct_output_string = file.read
-  file.close
-
-  # Store the correct output as an array.
-  correct_output = correct_output_string.split("\n")
-
-  # Keep track of how many don't match.
-  wrong_count = 0
-
-  # Go through each item in the vocabulary,
-  # See if the stemmer's output matches the correct output.
-  for i in 0...vocabulary.length
-    copy = vocabulary[i] + ""
-    copy = porter_stemmer(copy)
-    #puts "word: #{vocabulary[i]}\tcorrect: #{correct_output[i]}\tstemmed: #{copy}" if copy != correct_output[i]
-    printf("%15s\t%15s\t%15s\n", vocabulary[i], correct_output[i], copy) if copy != correct_output[i]
-    wrong_count += 1 if copy != correct_output[i]
+  
+  vocabulary.each_with_index do |word, i|
+    stem = word + ""
+    stem = porter_stemmer(stem)
+    printf("%20s\t%20s\n", word, stem)
   end
-
-  # Calculate the success rate.
-  success_rate = 1.0 - wrong_count.to_f / vocabulary.length.to_f
-
-  # Display the success rate.
-  puts "Rate: #{wrong_count} / #{vocabulary.length} = #{success_rate}"
+  
+elsif $compare_mode
+  file = File.open($user_vocabulary_file, "rb")
+  vocabulary_string = file.read
+  file.close
+  
+  # Store the vocabulary as an array.
+  vocabulary = vocabulary_string.split("\n")
+  
+  file = File.open($user_golden_file, "rb")
+  golden_string = file.read
+  file.close
+  
+  # Store the golden stems as an array.
+  golden = golden_string.split("\n")
+  
+  vocabulary_count = vocabulary.length
+  failure_count = 0
+  success_rate = 0.0
+  
+  printf("%20s\t%20s\t%20s\n", "WORD", "GOLDEN", "STEM")
+  vocabulary.each_with_index do |word, i|
+    stem = word + ""
+    stem = porter_stemmer(stem)
+    printf("%20s\t%20s\t%20s\n", word, golden[i], stem)
+    failure_count += 1 if golden[i] != stem
+  end
+  
+  success_rate = (1.0 - failure_count.to_f / vocabulary_count.to_f)
+  # Display success rate.
+  puts "Success Rate: #{success_rate * 100}% (#{vocabulary_count - failure_count}/#{vocabulary_count})"
 end
+
+# elsif false
+#   # Run on specific files.
+#   # Open up the vocabulary file.
+#   file = File.open("voc.txt", "rb")
+#   vocabulary_string = file.read
+#   file.close
+#
+#   # Store the vocabulary as an array.
+#   vocabulary = vocabulary_string.split("\n")
+#
+#   # Open up the correct output file.
+#   file = File.open("output.txt", "rb")
+#   correct_output_string = file.read
+#   file.close
+#
+#   # Store the correct output as an array.
+#   correct_output = correct_output_string.split("\n")
+#
+#   # Keep track of how many don't match.
+#   wrong_count = 0
+#
+#   # Go through each item in the vocabulary,
+#   # See if the stemmer's output matches the correct output.
+#   for i in 0...vocabulary.length
+#     copy = vocabulary[i] + ""
+#     copy = porter_stemmer(copy)
+#     #puts "word: #{vocabulary[i]}\tcorrect: #{correct_output[i]}\tstemmed: #{copy}" if copy != correct_output[i]
+#     printf("%15s\t%15s\t%15s\n", vocabulary[i], correct_output[i], copy) if copy != correct_output[i]
+#     wrong_count += 1 if copy != correct_output[i]
+#   end
+#
+#   # Calculate the success rate.
+#   success_rate = 1.0 - wrong_count.to_f / vocabulary.length.to_f
+#
+#   # Display the success rate.
+#   puts "Rate: #{wrong_count} / #{vocabulary.length} = #{success_rate}"
+# end
